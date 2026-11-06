@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="icon.png">
+<meta name="description" content="Spacoust turns NASA Earth images into music. Download the free Windows app.">
+<style>html{color-scheme:light dark}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Spacoust</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a scanning "playhead" runs through the page — hero demo on the right,
+   then a single column of how-it-works, the color→scale legend, and install steps. */
+:root {
+  --ink: #0d1b3e;          /* logo navy */
+  --ink-soft: #4a5878;
+  --paper: #f5f8fc;        /* faint blue-white, like the logo ground */
+  --panel: #ffffff;
+  --line: #dbe3ef;
+  --ocean: #1d6fd1;        /* accent */
+  --ocean-ink: #ffffff;
+  --veg: #2f9e55;
+  --heat: #d0612a;
+  --ice: #8a97ab;
+  --violet: #6b4fd8;
+  --stage: #08142e;        /* the demo screen stays dark in both themes */
+  --stage-fg: #cfe0ff;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #e6edf8; --ink-soft: #9aa8c2; --paper: #0a1226; --panel: #111c36; --line: #22304f;
+    --ocean: #4c95f0; --ocean-ink: #04132b; --veg: #4cc276; --heat: #ec8550; --ice: #a7b3c6; --violet: #9a85ff;
+    --stage: #050c1e; --stage-fg: #cfe0ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #e6edf8; --ink-soft: #9aa8c2; --paper: #0a1226; --panel: #111c36; --line: #22304f;
+  --ocean: #4c95f0; --ocean-ink: #04132b; --veg: #4cc276; --heat: #ec8550; --ice: #a7b3c6; --violet: #9a85ff;
+  --stage: #050c1e; --stage-fg: #cfe0ff; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--display); line-height: 1.05; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--ocean); }
+:focus-visible { outline: 3px solid var(--ocean); outline-offset: 3px; border-radius: 6px; }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+.brand img { width: 36px; height: 36px; }
+.brand span { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: -0.01em; }
+.top nav { display: flex; gap: 22px; font-size: 14px; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover { color: var(--ink); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; padding-block: 36px 72px; }
+.hero > * { min-width: 0; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocean); }
+.hero h1 { font-size: clamp(44px, 7vw, 84px); font-weight: 800; letter-spacing: -0.035em; margin-top: 14px; }
+.hero h1 em { font-style: normal; color: var(--ocean); }
+.lede { margin-top: 20px; font-size: 18px; color: var(--ink-soft); max-width: 46ch; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 32px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 12px;
+  background: var(--ocean); color: var(--ocean-ink); font-weight: 600; font-size: 16px; text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px -10px var(--ocean); }
+.btn svg { width: 20px; height: 20px; }
+.meta { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+
+/* demo stage */
+.stage { background: var(--stage); color: var(--stage-fg); border-radius: 18px; padding: 18px; }
+.screen { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 2 / 1; max-width: 100%; background: #000; }
+.screen img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.screen .shade { position: absolute; inset: 0 auto 0 0; width: 0; background: rgba(5, 12, 30, .45); }
+.screen .head { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: #fff; box-shadow: 0 0 12px 2px rgba(120, 180, 255, .9); opacity: 0; transition: opacity .2s; }
+.stage.playing .head { opacity: 1; }
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 54px; margin-top: 14px; }
+.bars i { flex: 1; min-width: 0; border-radius: 2px 2px 0 0; background: #2a4f8f; height: 8%; transition: background .1s; }
+.bars i.on { background: #8ec1ff; }
+.bars i.rest { background: transparent; border-bottom: 2px dotted #2a4f8f; }
+.controls { display: flex; align-items: center; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+.play {
+  width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer; flex: none;
+  background: #fff; color: #08142e; display: grid; place-items: center;
+}
+.play svg { width: 18px; height: 18px; }
+.readout { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 12px; }
+.readout span { border: 1px solid #23365f; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.caption { margin-top: 12px; font-size: 13px; color: #8ea3c8; }
+
+/* sections */
+section.block { padding-block: 64px; border-top: 1px solid var(--line); }
+.block h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -0.02em; }
+.block .intro { margin-top: 12px; color: var(--ink-soft); max-width: 62ch; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px; list-style: none; padding: 0; counter-reset: s; }
+.steps li { counter-increment: s; min-width: 0; }
+.steps li::before {
+  content: counter(s); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid var(--ocean); color: var(--ocean); font-family: var(--mono); font-size: 14px; margin-bottom: 14px;
+}
+.steps h3 { font-size: 21px; font-weight: 700; }
+.steps p { margin-top: 8px; color: var(--ink-soft); }
+
+/* mapping */
+.map { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+.map > * { min-width: 0; }
+.rules { display: grid; gap: 0; }
+.rule { display: grid; grid-template-columns: 9.5em 1fr; gap: 16px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.rule dt { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); padding-top: 2px; }
+.rule dd { margin: 0; }
+.scales { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.scale { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.scale .sw { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.scale .sw b { width: 14px; height: 14px; border-radius: 4px; flex: none; }
+.scale .name { font-family: var(--mono); font-size: 13px; color: var(--ink); margin-top: 10px; }
+.scale .feel { font-size: 14px; color: var(--ink-soft); margin-top: 2px; }
+.notes { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-top: 8px; letter-spacing: 0.04em; }
+
+/* install */
+.install { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; margin-top: 36px; }
+.install > * { min-width: 0; }
+.install ol { margin: 0; padding-left: 1.3em; display: grid; gap: 14px; }
+.install kbd { font-family: var(--mono); font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; }
+.req { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.req h3 { font-size: 18px; font-weight: 700; }
+.req dl { margin: 14px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; font-size: 15px; }
+.req dt { color: var(--ink-soft); }
+.req dd { margin: 0; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 48px; font-size: 14px; color: var(--ink-soft); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+@media (max-width: 860px) {
+  .hero, .map, .install { grid-template-columns: 1fr; gap: 36px; }
+  .steps { grid-template-columns: 1fr; gap: 26px; }
+  .top nav { display: none; }
+  .hero { padding-block: 16px 56px; }
+}
+@media (max-width: 460px) {
+  .scales { grid-template-columns: 1fr; }
+  .rule { grid-template-columns: 1fr; gap: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .btn, .bars i { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="brand" href="#top" aria-label="Spacoust home"><img src="icon.png" alt=""><span>Spacoust</span></a>
+  <nav aria-label="Sections">
+    <a href="#how">How it works</a>
+    <a href="#mapping">What you hear</a>
+    <a href="#install">Install</a>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">The Earth Information Jukebox</p>
+      <h1>Hear the <em>planet</em>.</h1>
+      <p class="lede">Spacoust turns NASA Earth images into music. AI reads what is happening in the scene, then the image's light and color become a melody you can listen to.</p>
+      <div class="cta">
+        <a class="btn" id="download" href="https://github.com/najh9090/spacoust/releases/latest/download/Spacoust.exe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download for Windows
+        </a>
+        <span class="meta">v1.0 · Spacoust.exe · 147 MB</span>
+      </div>
+    </div>
+
+    <figure class="stage" id="stage" style="margin:0">
+      <div class="screen">
+        <img src="earth.webp" alt="Sample Earth image: deep blue ocean, a green and sand-colored landmass, white polar ice and clouds, with the night side darkening to the right" width="800" height="400">
+        <div class="shade" id="shade"></div>
+        <div class="head" id="head"></div>
+      </div>
+      <div class="bars" id="bars" aria-hidden="true"></div>
+      <div class="controls">
+        <button class="play" id="play" type="button" aria-label="Play the sample">
+          <svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          <svg id="icoPause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" hidden><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </button>
+        <div class="readout"><span>104 BPM</span><span>Minor pentatonic</span><span>Key of G</span><span id="time">0:00 / 0:21</span></div>
+      </div>
+      <figcaption class="caption">Sample: this image, scanned left to right. Each bar is one column of pixels; dotted gaps are dark areas, played as silence.</figcaption>
+      <audio id="audio" src="sample.mp3" preload="metadata"></audio>
+    </figure>
+  </div>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <h2>From pixels to music in three steps</h2>
+      <p class="intro">No setup, no audio knowledge. Open an image from NASA's Earth Information Center, Worldview or Earth Observatory and press one button.</p>
+      <ol class="steps">
+        <li><h3>Open an image</h3><p>Any satellite image or data map works: JPG, PNG, WebP or TIFF.</p></li>
+        <li><h3>AI reads the scene</h3><p>OpenAI vision describes what it sees, names the phenomenon (wildfire, hurricane, sea ice) and sets the mood and tempo.</p></li>
+        <li><h3>Listen and save</h3><p>Spacoust scans the image left to right and composes a piece you can play and export as a WAV file.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="mapping">
+    <div class="wrap">
+      <h2>What you are hearing</h2>
+      <p class="intro">The music is computed from the image itself, so the same image always produces the same piece. Nothing is random.</p>
+      <div class="map">
+        <dl class="rules">
+          <div class="rule"><dt>Brightness</dt><dd>Pitch of each note. Brighter column, higher note. Brighter image overall, faster tempo.</dd></div>
+          <div class="rule"><dt>Darkness</dt><dd>Silence. The night side of Earth is heard as rests.</dd></div>
+          <div class="rule"><dt>Saturation</dt><dd>Tone color. Vivid regions sound richer, pale regions purer.</dd></div>
+          <div class="rule"><dt>Edges</dt><dd>Percussion. Coastlines, storms and fire fronts add rhythm.</dd></div>
+          <div class="rule"><dt>Red vs blue</dt><dd>Stereo position. Warm areas lean one way, cool areas the other.</dd></div>
+        </dl>
+        <div>
+          <div class="scales">
+            <div class="scale"><div class="sw"><b style="background:var(--veg)"></b>Green</div><p class="name">Major pentatonic</p><p class="feel">Vegetation, growth</p><p class="notes">0 · 2 · 4 · 7 · 9</p></div>
+            <div class="scale"><div class="sw"><b style="background:var(--ocean)"></b>Blue</div><p class="name">Minor pentatonic</p><p class="feel">Oceans, water</p><p class="notes">0 · 3 · 5 · 7 · 10</p></div>
+            <div class="scale"><div class="sw"><b style="background:var(--heat)"></b>Red / orange</div><p class="name">Phrygian</p><p class="feel">Heat, fire, desert</p><p class="notes">0 · 1 · 3 · 5 · 7 · 8 · 10</p></div>
+            <div class="scale"><div class="sw"><b style="background:var(--ice)"></b>Grey / white</div><p class="name">Dorian</p><p class="feel">Ice, clouds</p><p class="notes">0 · 2 · 3 · 5 · 7 · 9 · 10</p></div>
+          </div>
+          <p class="intro" style="font-size:14px">The dominant color picks the scale. Numbers are semitones above the key note.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="install">
+    <div class="wrap">
+      <h2>Install</h2>
+      <div class="install">
+        <ol>
+          <li>Download <kbd>Spacoust.exe</kbd>. If your browser warns about the file, choose <kbd>Keep</kbd>.</li>
+          <li>Double-click it. Windows may show “Windows protected your PC” because the app is new and unsigned. Click <kbd>More info</kbd>, then <kbd>Run anyway</kbd>.</li>
+          <li>The first launch takes 5 to 10 seconds. Then click <kbd>Open image</kbd> and <kbd>Analyze &amp; Sonify</kbd>.</li>
+        </ol>
+        <div class="req">
+          <h3>Requirements</h3>
+          <dl>
+            <dt>System</dt><dd>Windows 10 or 11, 64-bit</dd>
+            <dt>Internet</dt><dd>Needed for the AI analysis</dd>
+            <dt>Space</dt><dd>About 150 MB</dd>
+            <dt>Install</dt><dd>None. It runs as a single file.</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Spacoust · built for the NASA Space Apps Challenge, “The Earth Information Jukebox”.</span>
+    <span>Independent project, not affiliated with NASA.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Real values from the sample render: 64 columns, 8th notes at 104.5 BPM.
+  var COLS = 64, NOTE_SPAN = 64 * 60 / 104.5 / 2; // seconds the scan takes (rest is reverb tail)
+  var audio = document.getElementById("audio"), stage = document.getElementById("stage");
+  var head = document.getElementById("head"), shade = document.getElementById("shade");
+  var barsEl = document.getElementById("bars"), timeEl = document.getElementById("time");
+  var btn = document.getElementById("play"), icoPlay = document.getElementById("icoPlay"), icoPause = document.getElementById("icoPause");
+  var bars = [];
+
+  // Bar heights from the image's own column brightness (same rule as the app).
+  var img = new Image();
+  img.onload = function () {
+    var c = document.createElement("canvas"); c.width = COLS; c.height = 32;
+    var g = c.getContext("2d"); g.drawImage(img, 0, 0, COLS, 32);
+    var d = g.getImageData(0, 0, COLS, 32).data;
+    for (var x = 0; x < COLS; x++) {
+      var v = 0;
+      for (var y = 0; y < 32; y++) { var i = (y * COLS + x) * 4; v += Math.max(d[i], d[i + 1], d[i + 2]) / 255; }
+      v /= 32;
+      var b = document.createElement("i");
+      if (v < 0.06) b.className = "rest"; else b.style.height = (12 + v * 88).toFixed(0) + "%";
+      barsEl.appendChild(b); bars.push(b);
+    }
+  };
+  img.src = "earth.webp";
+
+  function fmt(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+  var last = -1;
+  function frame() {
+    var t = audio.currentTime, p = Math.min(t / NOTE_SPAN, 1);
+    head.style.left = (p * 100) + "%"; shade.style.width = (p * 100) + "%";
+    var col = Math.min(COLS - 1, Math.floor(p * COLS));
+    if (col !== last && bars.length) {
+      if (last >= 0 && bars[last]) bars[last].classList.remove("on");
+      if (p < 1 && bars[col]) bars[col].classList.add("on");
+      last = col;
+    }
+    timeEl.textContent = fmt(t) + " / " + fmt(audio.duration || 21);
+    if (!audio.paused) requestAnimationFrame(frame);
+  }
+  function setPlaying(on) {
+    stage.classList.toggle("playing", on);
+    icoPlay.hidden = on; icoPause.hidden = !on;
+    btn.setAttribute("aria-label", on ? "Pause the sample" : "Play the sample");
+  }
+  btn.addEventListener("click", function () {
+    if (audio.paused) { audio.play().then(function () { setPlaying(true); requestAnimationFrame(frame); }).catch(function () {}); }
+    else { audio.pause(); setPlaying(false); }
+  });
+  audio.addEventListener("ended", function () {
+    setPlaying(false); audio.currentTime = 0; last = -1;
+    bars.forEach(function (b) { b.classList.remove("on"); }); frame();
+  });
+})();
+</script>
+</body>
+</html>
