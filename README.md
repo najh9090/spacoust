@@ -1,7 +1,6 @@
 # Spacoust 🌍🎵
 
-**Hear the planet.** Spacoust turns NASA Earth images into music.
-Built for the NASA Space Apps Challenge — *The Earth Information Jukebox*.
+**Hear the planet.** Spacoust turns satellite images of Earth into music.
 
 <p align="center"><img src="logo.png" width="320" alt="Spacoust logo"></p>
 
